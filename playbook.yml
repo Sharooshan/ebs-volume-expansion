@@ -1,0 +1,6 @@
+- name: EBS Volume Expansion
+  hosts: servers
+  become: yes
+
+  roles:
+    - ebs_expand
