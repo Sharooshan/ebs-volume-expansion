@@ -6,7 +6,7 @@
 
 - name: Update ServiceNow Incident to Resolved
   uri:
-    url: "https://nowlearning-nlinst04253758-14pkn-0001.lab.service-now.com/api/now/table/incident/f31265b0495503107f4477c71d8367b0"
+    url: "https://nowlearning-nlinst04253758-14pkn-0001.lab.service-now.com/api/now/table/incident/{{ incident_sys_id }}"
     method: PATCH
     user: admin
     password: 9MpTfxSWeVEe
