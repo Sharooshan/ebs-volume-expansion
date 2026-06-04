@@ -1,6 +1,18 @@
+- name: Increase EBS Volume
+  amazon.aws.ec2_vol:
+    instance: i-07c479e4e157d084d
+    region: us-east-1
+    volume_size: 20
+    state: present
+  delegate_to: localhost
+
+- name: Pause for AWS update
+  pause:
+    seconds: 20
+
 - name: Expand partition
   command: growpart /dev/nvme0n1 1
-  ignore_errors: yes
+  failed_when: false
 
 - name: Resize filesystem
   command: resize2fs /dev/nvme0n1p1
