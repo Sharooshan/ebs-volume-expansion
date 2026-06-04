@@ -4,11 +4,10 @@
     region: us-east-1
     volume_size: 20
     state: present
-  delegate_to: localhost
-
+ 
 - name: Pause for AWS update
   pause:
-    seconds: 20
+    seconds: 30
 
 - name: Expand partition
   command: growpart /dev/nvme0n1 1
