@@ -1,14 +1,3 @@
-- name: Increase EBS Volume
-  amazon.aws.ec2_vol:
-    instance: i-07c479e4e157d084d
-    region: us-east-1
-    volume_size: 20
-    state: present
- 
-- name: Pause for AWS update
-  pause:
-    seconds: 30
-
 - name: Expand partition
   command: growpart /dev/nvme0n1 1
   failed_when: false
@@ -28,4 +17,3 @@
       state: "6"
       close_notes: "Resolved automatically via AAP automation"
     body_format: json
-
