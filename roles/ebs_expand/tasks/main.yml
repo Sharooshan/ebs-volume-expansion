@@ -6,10 +6,10 @@
   command: resize2fs /dev/nvme0n1p1
 
 
-# ✅ STEP 1 → GET CR sys_id dynamically
+# ✅ STEP 1 — Get CR sys_id dynamically (FIXED URL ✅)
 - name: Get Change Request sys_id
   uri:
-    url: "https://nowlearning-nlinst04253758-14pkn-0001.lab.service-now.com/api/now/table/change_request?sysparm_query=short_description=EBS Volume Expansion&sysparm_limit=1"
+    url: "https://nowlearning-nlinst04253758-14pkn-0001.lab.service-now.com/api/now/table/change_request?sysparm_query=short_description=EBS%20Volume%20Expansion&sysparm_limit=1"
     method: GET
     user: admin
     password: 9MpTfxSWeVEe
@@ -19,7 +19,7 @@
   register: cr_response
 
 
-# ✅ STEP 2 → USE THAT sys_id
+# ✅ STEP 2 — Update same CR dynamically
 - name: Update ServiceNow Change Request
   uri:
     url: "https://nowlearning-nlinst04253758-14pkn-0001.lab.service-now.com/api/now/table/change_request/{{ cr_response.json.result[0].sys_id }}"
