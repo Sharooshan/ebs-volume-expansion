@@ -5,10 +5,22 @@
 - name: Resize filesystem
   command: resize2fs /dev/nvme0n1p1
 
-# ✅ FINAL — Use passed CR sys_id directly (BEST METHOD 🔥)
+# ✅ GET CR using short description (encoded ✅)
+- name: Get Change Request sys_id
+  uri:
+    url: "https://nowlearning-nlinst04253758-14pkn-0001.lab.service-now.com/api/now/table/change_request?sysparm_query=short_description=EBS%20Volume%20Expansion&sysparm_limit=1"
+    method: GET
+    user: admin
+    password: 9MpTfxSWeVEe
+    headers:
+      Content-Type: "application/json"
+    return_content: yes
+  register: cr_response
+
+# ✅ UPDATE same CR
 - name: Update ServiceNow Change Request
   uri:
-    url: "https://nowlearning-nlinst04253758-14pkn-0001.lab.service-now.com/api/now/table/change_request/{{ cr_sys_id }}"
+    url: "https://nowlearning-nlinst04253758-14pkn-0001.lab.service-now.com/api/now/table/change_request/{{ cr_response.json.result[0].sys_id }}"
     method: PATCH
     user: admin
     password: 9MpTfxSWeVEe
@@ -17,4 +29,3 @@
     body:
       work_notes: "Disk expansion completed via AAP automation ✅"
     body_format: json
-
