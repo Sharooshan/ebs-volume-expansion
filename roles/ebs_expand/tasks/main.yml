@@ -1,30 +1,39 @@
-#hjkhkd
+# ✅ STEP 1 — AWS AUTO RESIZE
 - name: Increase EBS Volume (AWS)
   amazon.aws.ec2_vol:
     id: vol-0b257fa0954efa050
-    availability_zone: us-east-1d
     region: us-east-1
+    availability_zone: us-east-1d
     volume_size: 25
     modify_volume: true
     state: present
   delegate_to: localhost
   become: false
 
-# ✅ OS EXPAND
+
+# ✅ STEP 2 — WAIT FOR AWS RESIZE
+- name: Wait for AWS resize
+  pause:
+    seconds: 30
+
+
+# ✅ STEP 3 — EXPAND PARTITION
 - name: Expand partition
   command: growpart /dev/nvme0n1 1
   become: yes
   failed_when: false
 
+
+# ✅ STEP 4 — RESIZE FILESYSTEM
 - name: Resize filesystem
   command: resize2fs /dev/nvme0n1p1
   become: yes
 
 
-# ✅ GET CR
+# ✅ STEP 5 — GET CR USING IP
 - name: Get Change Request sys_id
   uri:
-    url: "https://nowlearning-nlinst04253758-14pkn-0001.lab.service-now.com/api/now/table/change_request?sysparm_query=short_description=EBS%20Volume%20Expansion^state=implement&sysparm_limit=1"
+    url: "https://nowlearning-nlinst04253758-14pkn-0001.lab.service-now.com/api/now/table/change_request?sysparm_query=short_descriptionLIKE54.198.71.86&sysparm_limit=1"
     method: GET
     user: admin
     password: 9MpTfxSWeVEe
@@ -34,7 +43,13 @@
   register: cr_response
 
 
-# ✅ UPDATE CR
+# ✅ DEBUG (CHECK RESPONSE)
+- name: Debug CR response
+  debug:
+    var: cr_response.json
+
+
+# ✅ STEP 6 — UPDATE CR (SAFE)
 - name: Update ServiceNow Change Request
   uri:
     url: "https://nowlearning-nlinst04253758-14pkn-0001.lab.service-now.com/api/now/table/change_request/{{ cr_response.json.result[0].sys_id }}"
@@ -44,5 +59,7 @@
     headers:
       Content-Type: "application/json"
     body:
-      work_notes: "AWS + OS disk expansion completed ✅"
+      work_notes: "✅ AWS volume resized and OS disk expanded successfully"
     body_format: json
+  when: cr_response.json.result | length > 0
+
