@@ -1,7 +1,7 @@
 # ✅ AWS AUTO RESIZE
 - name: Increase EBS Volume (AWS)
   amazon.aws.ec2_vol:
-    id: vol-0b257fa0954efa050
+    instance: i-07c479e4e157d084d
     region: us-east-1
     volume_size: 25
     state: present
