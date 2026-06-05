@@ -1,14 +1,14 @@
-# ✅ AWS AUTO RES
+
 - name: Increase EBS Volume (AWS)
   amazon.aws.ec2_vol:
     id: vol-0b257fa0954efa050
+    availability_zone: us-east-1d
     region: us-east-1
     volume_size: 25
     modify_volume: true
     state: present
   delegate_to: localhost
   become: false
-
 
 # ✅ OS EXPAND
 - name: Expand partition
