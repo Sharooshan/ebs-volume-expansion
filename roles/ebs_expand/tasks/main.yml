@@ -1,7 +1,7 @@
-# ✅ STEP 1 — AWS AUTO RESIZE (NO sudo ✅)
+# ✅ AWS AUTO RESIZE
 - name: Increase EBS Volume (AWS)
   amazon.aws.ec2_vol:
-    volume_id: vol-0b257fa0954efa050
+    id: vol-0b257fa0954efa050
     region: us-east-1
     volume_size: 25
     state: present
@@ -9,20 +9,18 @@
   become: false
 
 
-# ✅ STEP 2 — EXPAND PARTITION (needs sudo ✅)
+# ✅ OS EXPAND
 - name: Expand partition
   command: growpart /dev/nvme0n1 1
   become: yes
   failed_when: false
 
-
-# ✅ STEP 3 — RESIZE FILESYSTEM (needs sudo ✅)
 - name: Resize filesystem
   command: resize2fs /dev/nvme0n1p1
   become: yes
 
 
-# ✅ STEP 4 — GET CR (dynamic ✅)
+# ✅ GET CR
 - name: Get Change Request sys_id
   uri:
     url: "https://nowlearning-nlinst04253758-14pkn-0001.lab.service-now.com/api/now/table/change_request?sysparm_query=short_description=EBS%20Volume%20Expansion^state=implement&sysparm_limit=1"
@@ -35,7 +33,7 @@
   register: cr_response
 
 
-# ✅ STEP 5 — UPDATE CR ✅
+# ✅ UPDATE CR
 - name: Update ServiceNow Change Request
   uri:
     url: "https://nowlearning-nlinst04253758-14pkn-0001.lab.service-now.com/api/now/table/change_request/{{ cr_response.json.result[0].sys_id }}"
@@ -45,5 +43,5 @@
     headers:
       Content-Type: "application/json"
     body:
-      work_notes: "AWS + OS disk expansion completed automatically ✅"
+      work_notes: "AWS + OS disk expansion completed ✅"
     body_format: json
