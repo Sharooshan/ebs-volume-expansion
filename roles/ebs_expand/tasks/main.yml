@@ -1,10 +1,12 @@
-# ✅ AWS AUTO RESIZE
+# ✅ AWS AUTO RES
+
 - name: Increase EBS Volume (AWS)
   amazon.aws.ec2_vol:
     instance: i-07c479e4e157d084d
     region: us-east-1
     volume_size: 25
     state: present
+    modify_volume: true 
   delegate_to: localhost
   become: false
 
