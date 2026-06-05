@@ -4,7 +4,7 @@
     id: vol-0b257fa0954efa050
     region: us-east-1
     availability_zone: us-east-1d
-    volume_size: 25
+    volume_size: 26
     modify_volume: true
     state: present
   delegate_to: localhost
